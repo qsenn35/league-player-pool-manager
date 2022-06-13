@@ -1,0 +1,16 @@
+.ViewPool__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ViewPool__header-go-to-edit {
+  padding: 10px;
+  line-height: 1.5715;
+  margin-bottom: 0.5em;
+}
+
+.ViewPool__players-controls {
+  margin-bottom: 0.5em;
+}

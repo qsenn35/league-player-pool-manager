@@ -1,0 +1,9 @@
+.PortalLayout {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+}
+
+.PortalLayout__main {
+  padding: 2em;
+}

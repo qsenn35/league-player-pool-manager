@@ -1,0 +1,37 @@
+.EditPool {
+  height: 200vh;
+}
+
+.EditPool__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.EditPool__header-go-to-view {
+  padding: 10px;
+  line-height: 1.5715;
+  margin-bottom: 0.5em;
+}
+
+.EditPool__players-controls {
+  margin-bottom: 0.5em;
+}
+
+.EditPool__teams-controls {
+  width: 650px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+
+.EditPool__delete-pool {
+  float: right;
+  margin: 0;
+  color: red !important;
+}
+
+.EditPool__delete-pool:hover {
+  color: red;
+}
