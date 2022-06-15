@@ -55,11 +55,9 @@ function App() {
           path="/pools/view/:poolId"
           element={
             <ContextWrapper>
-              <ProtectedRoute>
-                <PortalLayout>
-                  <ViewPool />
-                </PortalLayout>
-              </ProtectedRoute>
+              <PortalLayout>
+                <ViewPool />
+              </PortalLayout>
             </ContextWrapper>
           }
         />
