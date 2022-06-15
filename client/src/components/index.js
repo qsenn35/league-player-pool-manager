@@ -6,6 +6,11 @@ import EditableTable from "./EditableTable/EditableTable";
 import AddPlayerForm from "./AddPlayerForm/AddPlayerForm";
 import AddPlayerModal from "./AddPlayerModal/AddPlayerModal";
 import ShareLinkButton from "./ShareLinkButton/ShareLinkButton";
+import PlayerEditableTable from "./PlayerEditableTable/PlayerEditableTable";
+import TeamEditableTable from "./TeamEditableTable/TeamEditableTable";
+import PageLoader from "./PageLoader/PageLoader";
+import Navigation from "./Navigation/Navigation";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 export {
   JoinPoolForm,
@@ -16,4 +21,9 @@ export {
   AddPlayerForm,
   AddPlayerModal,
   ShareLinkButton,
+  PlayerEditableTable,
+  TeamEditableTable,
+  PageLoader,
+  Navigation,
+  ProtectedRoute,
 }

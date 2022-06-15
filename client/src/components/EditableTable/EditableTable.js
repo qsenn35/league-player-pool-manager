@@ -1,5 +1,5 @@
 import { EditableCell, EditableRow } from '../../components';
-import { Table, Form } from 'antd';
+import { Table } from 'antd';
 
 
 const tableComponents = {
@@ -9,11 +9,9 @@ const tableComponents = {
   },
 };
 
-const EditableTable = ({ dataSource, columns, handleSave }) => {
-  const [form] = Form.useForm();
-
+const EditableTable = ({ dataSource, columns, handleSave, ...rest }) => {
   return (
-    <Table dataSource={dataSource} columns={columns} components={tableComponents} />
+    <Table dataSource={dataSource} columns={columns} components={tableComponents} {...rest} />
   )
 }
 

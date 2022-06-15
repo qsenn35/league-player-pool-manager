@@ -152,49 +152,49 @@ const JoinPoolForm = () => {
       onSubmitCapture={handleSubmit}
       labelCol={{ span: 2 }}
       wrapperCol={{ span: 5 }}
+      initialValues={{ playerId: state.poolId, ...state.player }}
     >
       <Form.Item
         label="Pool ID"
         name="poolId"
-        
         rules={[{ required: true, message: "Please enter a Pool ID!" }]}
       >
-        <Input placeholder="Pool ID" defaultValue={state.poolId} onChange={handleChange}/>
+        <Input placeholder="Pool ID" onChange={handleChange}/>
       </Form.Item>
       <Form.Item
         label="First Name"
         name="firstName"
         rules={[{ required: true, message: "Please enter a First Name!" }]}
       >
-        <Input placeholder="Johnny" defaultValue={state.player.firstName} onChange={handleChange}></Input>
+        <Input placeholder="Johnny" onChange={handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Last Name"
         name="lastName"
         rules={[{ required: true, message: "Please enter a Last Name!" }]}
       >
-        <Input placeholder="Appleseed" defaultValue={state.player.lastName} onChange={handleChange}></Input>
+        <Input placeholder="Appleseed" onChange={handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Player Name"
         name="playerName"
         rules={[{ required: true, message: "Please enter a Player Name (in-game name)!" }]}
       >
-        <Input placeholder="Faker" defaultValue={state.player.playerName} onChange={handleChange}></Input>
+        <Input placeholder="Faker" onChange={handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Discord Tag"
         name="discordTag"
         rules={[{ required: true, message: "Please enter a Discord Tag!" }]}
       >
-        <Input placeholder="Faker#1234" defaultValue={state.player.discordTag} onChange={handleChange}></Input>
+        <Input placeholder="Faker#1234" onChange={handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Rank"
         name="rank"
         rules={[{ required: true, message: "Please enter a Rank!" }]}
       >
-        <Select defaultValue={state.player.rank} onChange={(value) => handleSelectChange("rank", value)}>
+        <Select onChange={(value) => handleSelectChange("rank", value)}>
           <Option value="IRON">Iron</Option>
           <Option value="BRONZE">Bronze</Option>
           <Option value="SILVER">Silver</Option>
@@ -211,7 +211,7 @@ const JoinPoolForm = () => {
         name="primaryRole"
         rules={[{ required: true, message: "Please enter a Primary Role!" }]}
       >
-        <Select defaultValue={state.player.primaryRole} onChange={(value) => handleSelectChange("primaryRole", value)}>
+        <Select onChange={(value) => handleSelectChange("primaryRole", value)}>
           <Option value="TOP">Top</Option>
           <Option value="JUNGLE">Jungle</Option>
           <Option value="MID">Mid</Option>
@@ -224,7 +224,7 @@ const JoinPoolForm = () => {
         name="secondaryRole"
         rules={[{ required: true, message: "Please enter a Secondary Role!" }]}
       >
-        <Select defaultValue={state.player.secondaryRole} onChange={(value) => handleSelectChange("secondaryRole", value)}>
+        <Select onChange={(value) => handleSelectChange("secondaryRole", value)}>
           <Option value="TOP">Top</Option>
           <Option value="JUNGLE">Jungle</Option>
           <Option value="MID">Mid</Option>

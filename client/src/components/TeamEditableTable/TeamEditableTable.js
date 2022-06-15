@@ -11,26 +11,47 @@ const TeamEditableTable = ({ pool, team }) => {
       title: "First Name",
       dataIndex: "firstName",
       key: "firstName",
+      filters: team.map(player => ({ text: player.firstName, value: player.firstName })),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.firstName.startsWith(value),
     },
     {
       title: "Last Name",
       dataIndex: "lastName",
       key: "lastName",
+      filters: team.map(player => ({ text: player.lastName, value: player.lastName })),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.lastName.startsWith(value),
     },
     {
       title: "Discord",
-      dataIndex: "discord",
-      key: "discord",
+      dataIndex: "discordTag",
+      key: "discordTag",
+      filters: team.map(player => ({ text: player.discordTag, value: player.discordTag })),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.discordTag === value,
     },
     {
       title: "Player Name",
       dataIndex: "playerName",
       key: "playerName",
+      filters: team.map(player => ({ text: player.playerName, value: player.playerName })),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.playerName.startsWith(value),
     },
     {
       title: "Rank",
       dataIndex: "rank",
       key: "rank",
+    },
+    {
+      title: "Assigned Role",
+      dataIndex: "assignedRole",
+      key: "assignedRole",
     },
     {
       title: "Primary Role",
@@ -100,7 +121,7 @@ const TeamEditableTable = ({ pool, team }) => {
   });
 
   return (
-    <EditableTable dataSource={team.players} columns={editableColumns} />
+    <EditableTable dataSource={team} columns={editableColumns} pagination={false} />
   )
 }
 

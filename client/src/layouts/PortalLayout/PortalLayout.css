@@ -2,8 +2,31 @@
   width: 100vw;
   height: 100vh;
   overflow: auto;
+  display: flex;
 }
 
-.PortalLayout__main {
+.PortalLayout__nav-wrapper {
+  height: 100vh;
+  width: 100px;
+}
+
+.PortalLayout__main-wrapper {
   padding: 2em;
+  height: 100%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 530px) {
+  .PortalLayout {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .PortalLayout__nav-wrapper {
+    height: 80px;
+    width: 100vw;
+  }
 }

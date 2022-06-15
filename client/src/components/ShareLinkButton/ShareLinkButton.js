@@ -1,4 +1,4 @@
-import { Button, Tooltip } from "antd";
+import { Button, notification, Tooltip } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 
 const ShareLinkButton = () => {
@@ -6,14 +6,16 @@ const ShareLinkButton = () => {
   const handleClick = () => {
     navigator.clipboard.writeText(window.location)
       .then(() => {
-        // TODO: alert copied
+        notification.success({
+          message: "Copied!",
+        })
       })
   }
 
   return (
     <Tooltip placement="top" title="Copy Link">
       <Button onClick={handleClick}>
-        <CopyOutlined />
+        Copy Link <CopyOutlined />
       </Button>
     </Tooltip>
   )

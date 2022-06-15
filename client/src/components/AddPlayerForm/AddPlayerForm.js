@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { Button, Form, Input, Select } from "antd";
 
 const { Option } = Select;
@@ -63,11 +63,6 @@ const AddPlayerForm = ({
   };
   const [state, dispatch] = useReducer(formReducer, initialState);
 
-  // pass intialState to parent component on first render
-  useEffect(() => {
-    handleChange(state);
-  }, [])
-
   const handleSelectChange = (id, value) => {
     dispatch({
       type: id,
@@ -84,11 +79,18 @@ const AddPlayerForm = ({
       type: id,
       payload: value,
     });
-    handleChange(state);
+    handleChange({
+      ...state,
+      [id]: value,
+    });
   }
 
   const _handleSubmit = () => {
     handleSubmit(state);
+    dispatch({
+      type: 'SET_STATE',
+      payload: initialState,
+    });
   }
 
   return (
@@ -96,41 +98,42 @@ const AddPlayerForm = ({
       onSubmit={_handleSubmit}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 20 }}
+      initialValues={state}
     >
       <Form.Item
         label="First Name"
         name="firstName"
         rules={[{ required: true, message: "Please enter a First Name!" }]}
       >
-        <Input placeholder="Johnny" defaultValue={state.firstName} onChange={_handleChange}></Input>
+        <Input placeholder="Johnny" onChange={_handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Last Name"
         name="lastName"
         rules={[{ required: true, message: "Please enter a Last Name!" }]}
       >
-        <Input placeholder="Appleseed" defaultValue={state.lastName} onChange={_handleChange}></Input>
+        <Input placeholder="Appleseed" onChange={_handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Player Name"
         name="playerName"
         rules={[{ required: true, message: "Please enter a Player Name (in-game name)!" }]}
       >
-        <Input placeholder="Faker" defaultValue={state.playerName} onChange={_handleChange}></Input>
+        <Input placeholder="Faker" onChange={_handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Discord Tag"
         name="discordTag"
         rules={[{ required: true, message: "Please enter a Discord Tag!" }]}
       >
-        <Input placeholder="Faker#1234" defaultValue={state.discordTag} onChange={_handleChange}></Input>
+        <Input placeholder="Faker#1234" onChange={_handleChange}></Input>
       </Form.Item>
       <Form.Item
         label="Rank"
         name="rank"
         rules={[{ required: true, message: "Please enter a Rank!" }]}
       >
-        <Select defaultValue={state.rank} onChange={(value) => handleSelectChange("rank", value)}>
+        <Select onChange={(value) => handleSelectChange("rank", value)}>
           <Option value="IRON">Iron</Option>
           <Option value="BRONZE">Bronze</Option>
           <Option value="SILVER">Silver</Option>
@@ -147,7 +150,7 @@ const AddPlayerForm = ({
         name="primaryRole"
         rules={[{ required: true, message: "Please enter a Primary Role!" }]}
       >
-        <Select defaultValue={state.primaryRole} onChange={(value) => handleSelectChange("primaryRole", value)}>
+        <Select onChange={(value) => handleSelectChange("primaryRole", value)}>
           <Option value="TOP">Top</Option>
           <Option value="JUNGLE">Jungle</Option>
           <Option value="MID">Mid</Option>
@@ -160,7 +163,7 @@ const AddPlayerForm = ({
         name="secondaryRole"
         rules={[{ required: true, message: "Please enter a Secondary Role!" }]}
       >
-        <Select defaultValue={state.secondaryRole} onChange={(value) => handleSelectChange("secondaryRole", value)}>
+        <Select onChange={(value) => handleSelectChange("secondaryRole", value)}>
           <Option value="TOP">Top</Option>
           <Option value="JUNGLE">Jungle</Option>
           <Option value="MID">Mid</Option>
@@ -170,7 +173,7 @@ const AddPlayerForm = ({
       </Form.Item>
       {showAddPlayerButton ?
         <Form.Item>
-          <Button onClick={handleSubmit}>Add Player</Button>
+          <Button onClick={_handleSubmit}>Add Player</Button>
         </Form.Item> : <></>}
     </Form>
   )

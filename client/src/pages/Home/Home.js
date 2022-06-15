@@ -1,47 +1,60 @@
-import { Tabs } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { CreatePoolForm, JoinPoolForm } from '../../components';
+import { notification, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
+import { CreatePoolForm, JoinPoolForm } from "../../components";
+import { useUserContext } from "../../hooks";
+import "./home.css";
 
-const { TabPane } = Tabs;
+const { Title } = Typography;
 
 const Home = () => {
   const navigate = useNavigate();
+  const [user] = useUserContext();
 
   const handleCreatePool = async (poolData) => {
-    console.log(poolData);
     try {
-      const request = await fetch('http://localhost:3000/pools/create', {
-        method: 'POST',
+      const request = await fetch("http://localhost:3000/pools/create", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
         },
-        body: JSON.stringify(poolData)
+        body: JSON.stringify(poolData),
       });
       const response = await request.json();
 
       if (request.status === 200 && !response.error) {
-        console.log(response);
+        notification.success({
+          message: "Success!",
+          description: "Created pool!",
+        });
         navigate(`/pools/edit/${response.id}`);
       } else if (response.error) {
-        // show error alert
+        notification.error({
+          message: "Error!",
+          description: response.error,
+        });
         console.error(response.error);
       }
-      console.log(response);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   return (
-    <Tabs defaultActiveKey="1">
-      <TabPane tab="Join Pool" key="1">
-        <JoinPoolForm/>
-      </TabPane>
-      <TabPane tab="Create Pool" key="2">
-        <CreatePoolForm handleSubmit={handleCreatePool} handleChange={() => {}} />
-      </TabPane>
-    </Tabs>
-  )
-}
+    <div className="Home">
+      <div className="Home__create-pool App__card">
+        <div className="Home__create-pool-wrapper-title">
+          <h1>Create a Pool</h1>
+        </div>
+        <div className="Home__create-pool-form-wrapper">
+          <CreatePoolForm
+            handleSubmit={handleCreatePool}
+            handleChange={() => {}}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Home;

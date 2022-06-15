@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import { Button, Form, Input } from "antd";
+import "./create-pool-form.css";
 
 const CreatePoolForm = ({ handleChange, handleSubmit }) => {
   const reducer = (state, action) => {
@@ -50,8 +51,6 @@ const CreatePoolForm = ({ handleChange, handleSubmit }) => {
   return (
     <Form 
       onSubmit={_handleSubmit}
-      labelCol={{ span: 2 }}
-      wrapperCol={{ span: 5 }}
     >
       <Form.Item
         label="Title"
@@ -60,16 +59,7 @@ const CreatePoolForm = ({ handleChange, handleSubmit }) => {
       >
         <Input placeholder="My New Pool!" onChange={_handleChange} />
       </Form.Item>
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please enter a Password!" }]}
-      >
-        <Input placeholder="Super Secret 🤫"  onChange={_handleChange}/>
-      </Form.Item>
-      <Form.Item
-        wrapperCol={{ span: 2, offset: 2 }}
-      >
+      <Form.Item>
         <Button type="primary" onClick={_handleSubmit}>Create Pool</Button>
       </Form.Item>
     </Form>

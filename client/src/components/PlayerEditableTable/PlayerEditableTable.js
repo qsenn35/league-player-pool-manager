@@ -1,11 +1,36 @@
-import { Popconfirm } from "antd";
+import { useEffect, useState } from "react";
+import { Button, notification, Popconfirm } from "antd";
 import { EditableTable } from "../../components";
+import { useUserContext } from "../../hooks";
 
-const PlayerEditableTable = ({ pool, setPool, password }) => {
+const PlayerEditableTable = ({ pool, setPool }) => {
+  const [user] = useUserContext();
+  const [tableFilters, setTableFilters] = useState({
+    firstName: [],
+    lastName: [],
+    discordTag: [],
+    playerName: [],
+  });
+
   const poolId = pool.id;
 
+  useEffect(() => {
+    const tableFilters = pool.players.reduce((filters, player) => ({
+      firstName: [ ...filters.firstName, { text: player.firstName, value: player.firstName } ],
+      lastName: [ ...filters.lastName, { text: player.lastName, value: player.lastName } ],
+      discordTag: [ ...filters.discordTag, { text: player.discordTag, value: player.discordTag } ],
+      playerName: [ ...filters.playerName, { text: player.playerName, value: player.playerName } ],
+    }), {
+      firstName: [],
+      lastName: [],
+      discordTag: [],
+      playerName: [],
+    });
+    setTableFilters(tableFilters);
+    console.log(pool.players);
+  }, [pool]);
+
   const requestEditPlayer = async (newPlayer) => {
-    console.log(newPlayer)
     try {
       const request = await fetch(
         `http://localhost:3000/pools/${poolId}/players/edit`,
@@ -13,7 +38,7 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Basic ${password}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
           body: JSON.stringify({
             playerId: newPlayer.id,
@@ -24,8 +49,10 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
       const response = await request.json();
       return response;
     } catch (err) {
-      console.error(err);
-      // TODO: alert error here
+      notification.error({
+        message: "Error!",
+        description: err,
+      });
     }
   };
 
@@ -37,7 +64,7 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Basic ${password}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
           body: JSON.stringify({
             playerId,
@@ -47,28 +74,25 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
       const response = await request.json();
       return response;
     } catch (err) {
-      console.error(err);
-      // TODO alert error here
+      notification.error({
+        message: "Error!",
+        description: err,
+      });
     }
   };
 
   const handleSave = (e) => {
-    const newPlayers = pool.players.map((player) => {
-      if (player.id === e.id) {
-        console.log("matched");
-        return e;
-      }
-      return player;
-    });
-
     requestEditPlayer(e).then((response) => {
       if (response && response.error) {
-        console.error(response.error);
-        // TODO alert error
+        return notification.error({
+          message: "Error!",
+          description: response.error,
+        });
       }
+      
       setPool({
         ...pool,
-        players: newPlayers,
+        players: response.players,
       });
     });
   };
@@ -78,12 +102,20 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
 
     requestRemovePlayer(e.id).then((response) => {
       if (response && response.error) {
-        console.error(response.error);
-        // TODO alert error
+        notification.error({
+          message: "Error!",
+          description: response.error,
+        });
       }
+      
       setPool({
         ...pool,
         players: newPlayers,
+      });
+
+      notification.success({
+        message: "Success!",
+        description: "Deleted player.",
       });
     });
   };
@@ -93,21 +125,37 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
       title: "First Name",
       dataIndex: "firstName",
       key: "firstName",
+      filters: tableFilters.firstName,
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.firstName === value,
     },
     {
       title: "Last Name",
       dataIndex: "lastName",
       key: "lastName",
+      filters: tableFilters.lastName,
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.lastName === value,
     },
     {
       title: "Discord",
       dataIndex: "discordTag",
       key: "discordTag",
+      filters: tableFilters.discordTag,
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.discordTag === value,
     },
     {
       title: "Player Name",
       dataIndex: "playerName",
       key: "playerName",
+      filters: tableFilters.playerName,
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.playerName === value,
     },
     {
       title: "Rank",
@@ -133,7 +181,7 @@ const PlayerEditableTable = ({ pool, setPool, password }) => {
             title="Sure to delete?"
             onConfirm={() => handleDelete(record)}
           >
-            <a>Delete</a>
+            <Button type="link">Delete</Button>
           </Popconfirm>
         ) : null,
     },

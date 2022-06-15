@@ -21,7 +21,7 @@ const EditableCell = ({
     if (isEditing && !isSelect) {
       inputRef.current.focus();
     }
-  }, [isEditing]);
+  }, [isEditing, isSelect]);
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);

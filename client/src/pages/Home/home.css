@@ -1,0 +1,38 @@
+.Home {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Home__create-pool {
+  width: 30vw;
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Home__create-pool-wrapper-title {
+  margin-bottom: 1em;
+}
+
+@media only screen and (max-width: 990px) {
+  .Home__create-pool {
+    width: 40vw;
+    height: 40vh;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Home__create-pool {
+    width: 50vw;
+    height: 40vh;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .Home__create-pool {
+    width: 90vw;
+    height: 40vh;
+  }
+}

@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Typography, Popconfirm, Tooltip } from "antd";
+import { Button, Typography, Modal, Tooltip, notification } from "antd";
 import { RightOutlined } from "@ant-design/icons";
-import {
-  AddPlayerModal,
-  ShareLinkButton,
-} from "../../components";
-
+import { AddPlayerModal, ShareLinkButton, PlayerEditableTable, TeamEditableTable, PageLoader } from "../../components";
 import "./EditPool.css";
-import PlayerEditableTable from "../../components/PlayerEditableTable/PlayerEditableTable";
-import TeamEditableTable from "../../components/TeamEditableTable/TeamEditableTable";
+import { useUserContext } from "../../hooks";
+import { SERVER_URL } from "../../constants";
 
 const { Title } = Typography;
 
 const EditPool = () => {
-  const [password, setPassword] = useState(null);
-  const navigate = useNavigate();
   const params = useParams();
+  const navigate = useNavigate();
+  const [ user ] = useUserContext();
+
   const { poolId } = params;
 
   const [pool, setPool] = useState(null);
@@ -27,19 +24,13 @@ const EditPool = () => {
     setAddPlayerModalIsOpen(!addPlayerModalIsOpen);
 
   useEffect(() => {
-    if (!password) {
-      console.log("password requested");
-      const promptResult = prompt("Enter Pool Password");
-      setPassword(promptResult);
-    }
-
     const fetchPool = async () => {
       const request = await fetch(
         `http://localhost:3000/pools/${poolId}/edit`,
         {
           method: "GET",
           headers: {
-            Authorization: `Basic ${password}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
         }
       );
@@ -48,16 +39,18 @@ const EditPool = () => {
       return [response, request.status];
     };
 
-    if (password)
-      fetchPool(poolId).then(([response, status]) => {
-        if (status === 401) {
-          alert("Incorrect password!");
-          navigate(`/pools/view/${poolId}`);
-        }
-          
+    fetchPool(poolId).then(([response, status]) => {
+      if (status !== 200) {
+        notification.error({
+          message: "Error!",
+          description: response.error,
+        })
+        navigate(`/pools/view/${poolId}`);
+      } else {
         setPool(response);
-      });
-  }, [password]);
+      }
+    });
+  }, [poolId, user.accessToken, navigate]);
 
   const requestAddPlayer = async (newPlayer) => {
     try {
@@ -67,7 +60,7 @@ const EditPool = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Basic ${password}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
           body: JSON.stringify(newPlayer),
         }
@@ -75,33 +68,143 @@ const EditPool = () => {
       const response = await request.json();
       return response;
     } catch (err) {
-      console.error(err);
-      // TODO alert error here
+      notification.error({
+        message: "Error!",
+        description: err,
+      });
     }
   };
 
   const handleAddPlayer = (_e, player) => {
-    console.log(player);
-
-    const newPlayers = [...pool.players, player];
-
     requestAddPlayer(player).then((response) => {
       if (response && response.error) {
-        console.error(response.error);
-        // TODO alert error
+        return notification.error({
+          message: "Error!",
+          description: response.error,
+        });
       }
+
       setPool({
         ...pool,
-        players: newPlayers,
+        players: response.players,
       });
-
+      
       toggleAddPlayerModal();
+      notification.success({
+        message: "Success!",
+        description: "Player successfully added",
+      });
     });
   };
 
-  
+  const requestGenerateTeams = async (teamsType) => {
+    try {
+      const request = await fetch(
+        `http://localhost:3000/pools/${poolId}/teams/generate`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+          body: JSON.stringify({
+            teamsType,
+          }),
+        }
+      );
+      const response = await request.json();;
+      return response;
+    } catch (err) {
+      notification.success({
+        message: "Error!",
+        description: err,
+      });
+    }
+  };
 
-  if (!pool) return <div>Loading...</div>;
+  const handleGenerateTeams = (teamsType) => {
+    requestGenerateTeams(teamsType).then((response) => {
+      if (response && response.error) {
+        notification.error({
+          message: "Error!",
+          description: response.error,
+        });
+      } else {
+        setPool({
+          ...pool,
+          teams: response.teams,
+        });
+        notification.success({
+          message: "Success!",
+          description: `Teams of type "${teamsType}" generated!`,
+        });
+      }
+    });
+  };
+
+  const requestDeletePool = async () => {
+    try {
+      const request = await fetch(`${SERVER_URL}/pools/${poolId}/delete`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`
+        }
+      });
+      const response = await request.json();
+      return response;
+    } catch(error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  const handleDeletePool = async () => {
+    const response = await requestDeletePool();
+    
+    if (!response)
+      return notification.error({
+        message: "Error!",
+        description: "An unknown error occurred."
+      });
+
+    if (response && response.error) {
+      return notification.error({
+        message: "Error!",
+        description: response.error,
+      });
+    }
+
+    navigate('/pools');
+
+    return notification.success({
+      message: "Success!",
+      description: "Deleted Pool"
+    });
+  }
+
+  const handleGenerateTeamsConfirm = (teamsType) => {
+    Modal.confirm({
+      content: "Are you sure you want to generate teams? This will wipe all teams currently in the pool.",
+      onOk: () => handleGenerateTeams(teamsType),
+    })
+  }
+
+  const handleDeletePoolConfirm = () => {
+    Modal.confirm({
+      content: "Are you sure you want to delete this pool?",
+      onOk: () => handleDeletePool(),
+    });
+  }
+
+  if (!pool) return <PageLoader/>;
+
+  const teamsFlattened = (pool.teams || []).map((team) => {
+    const teamArray = Object.entries(team).reduce(
+      (final, [role, player]) => [...final, { ...player, assignedRole: role }],
+      []
+    );
+    return teamArray;
+  });
 
   return (
     <div className="EditPool">
@@ -119,40 +222,68 @@ const EditPool = () => {
         </div>
         <b>Pool Id: </b>
         {pool.id} <ShareLinkButton />
+        <br/>
+        <b>Created: </b> {pool.created}
         <div className="EditPool__players">
-        <Title level={3}>Players</Title>
+          <Title level={3}>Players</Title>
           <AddPlayerModal
             visible={addPlayerModalIsOpen}
             handleOk={handleAddPlayer}
             handleCancel={toggleAddPlayerModal}
           />
           <div className="EditPool__players-controls">
-            <Button
-              onClick={toggleAddPlayerModal}
-              type="primary"
-            >
+            <Button onClick={toggleAddPlayerModal} type="primary">
               Add Player +
             </Button>
           </div>
         </div>
-        <PlayerEditableTable poolId={poolId} pool={pool} setPool={setPool} password={password} />
+        <PlayerEditableTable
+          poolId={poolId}
+          pool={pool}
+          setPool={setPool}
+        />
         <div className="EditPool__teams">
           <Title level={3}>Teams</Title>
           <div className="EditPool__teams-controls">
             <Tooltip placement="top" title="10 Player Pools Only">
-              <Button type="primary" disabled={pool.players.length > 10 || pool.players.length < 10}>Generate Customs Teams</Button>
+              <Button
+                type="primary"
+                disabled={pool.players.length !== 10}
+                onClick={() => handleGenerateTeamsConfirm("customs")}
+              >
+                Generate Customs Teams
+              </Button>
             </Tooltip>
             <Tooltip placement="top" title="10 Player Pools Minimum">
-              <Button type="primary" disabled={pool.players.length < 10}>Generate Tournament Teams</Button>
+              <Button
+                type="primary"
+                disabled={pool.players.length < 10}
+                onClick={() => handleGenerateTeamsConfirm("tournament")}
+              >
+                Generate Tournament Teams
+              </Button>
             </Tooltip>
             <Tooltip placement="top" title="10 Player Pools Minimum">
-              <Button type="primary" disabled={pool.players.length < 10}>Generate Bootcamp Teams</Button>
+              <Button
+                type="primary"
+                disabled={pool.players.length < 10}
+                onClick={() => handleGenerateTeamsConfirm("bootcamp")}
+              >
+                Generate Bootcamp Teams
+              </Button>
             </Tooltip>
           </div>
         </div>
-        <TeamEditableTable team={{ players: [] }} />
+        {teamsFlattened.map((team, index) => {
+          return (
+            <div key={index}>
+              <Title level={4}>Team {index + 1}</Title>
+              <TeamEditableTable team={team} />
+            </div>
+          );
+        })}
       </Typography>
-      <Button type="link" className="EditPool__delete-pool">
+      <Button type="link" className="EditPool__delete-pool" onClick={handleDeletePoolConfirm}>
         Delete Pool
       </Button>
     </div>
