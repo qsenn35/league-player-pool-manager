@@ -1,9 +1,10 @@
 import { Button } from "antd";
+import { SERVER_URL } from "../../constants";
 
 const CreatePoolButton = () => {
   const handleClick = async () => {
     try {
-      const request = await fetch('localhost:3000/pools/create', {
+      const request = await fetch(`${SERVER_URL}/pools/create`, {
         method: 'POST',
       });
       const response = await request.json();

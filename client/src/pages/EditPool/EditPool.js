@@ -26,7 +26,7 @@ const EditPool = () => {
   useEffect(() => {
     const fetchPool = async () => {
       const request = await fetch(
-        `http://localhost:3000/pools/${poolId}/edit`,
+        `${SERVER_URL}/pools/${poolId}/edit`,
         {
           method: "GET",
           headers: {
@@ -55,7 +55,7 @@ const EditPool = () => {
   const requestAddPlayer = async (newPlayer) => {
     try {
       const request = await fetch(
-        `http://localhost:3000/pools/${poolId}/players/add`,
+        `${SERVER_URL}/pools/${poolId}/players/add`,
         {
           method: "PATCH",
           headers: {
@@ -100,7 +100,7 @@ const EditPool = () => {
   const requestGenerateTeams = async (teamsType) => {
     try {
       const request = await fetch(
-        `http://localhost:3000/pools/${poolId}/teams/generate`,
+        `${SERVER_URL}/pools/${poolId}/teams/generate`,
         {
           method: "PATCH",
           headers: {

@@ -6,6 +6,7 @@ import {
   Select,
 } from "antd";
 import { useReducer } from "react";
+import { SERVER_URL } from "../../constants";
 
 const { Option } = Select;
 
@@ -96,7 +97,7 @@ const JoinPoolForm = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const joinRequest = await fetch('http://localhost:3000/pools/join', {
+    const joinRequest = await fetch(`${SERVER_URL}/pools/join`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

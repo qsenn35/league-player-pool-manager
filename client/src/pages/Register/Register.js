@@ -1,6 +1,7 @@
 import { Button, Form, Input, notification, Typography } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../constants";
 import "./register.css";
 
 const { Title } = Typography;
@@ -12,7 +13,7 @@ const Register = () => {
 
   const handleSubmit = async () => {
     try {
-      const request = await fetch('http://localhost:3000/signup', {
+      const request = await fetch(`${SERVER_URL}/signup`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

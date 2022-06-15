@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { Button, Table, Typography, notification } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { AddPlayerModal, PageLoader, ShareLinkButton } from "../../components";
-
+import { SERVER_URL } from "../../constants";
 import "./ViewPool.css";
-import { useUserContext } from "../../hooks";
 
 const { Title } = Typography;
 
@@ -49,7 +48,7 @@ const ViewPool = () => {
 
   useEffect(() => {
     const fetchPool = async () => {
-      const request = await fetch(`http://localhost:3000/pools/${poolId}/view`);
+      const request = await fetch(`${SERVER_URL}/pools/${poolId}/view`);
       const response = await request.json();
 
       return response;
@@ -88,7 +87,7 @@ const ViewPool = () => {
   const requestJoinPool = async (newPlayer) => {
     try {
       const request = await fetch(
-        `http://localhost:3000/pools/join`,
+        `${SERVER_URL}/pools/join`,
         {
           method: "PATCH",
           headers: {

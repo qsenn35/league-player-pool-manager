@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, notification, Popconfirm } from "antd";
 import { EditableTable } from "../../components";
 import { useUserContext } from "../../hooks";
+import { SERVER_URL } from "../../constants";
 
 const PlayerEditableTable = ({ pool, setPool }) => {
   const [user] = useUserContext();
@@ -33,7 +34,7 @@ const PlayerEditableTable = ({ pool, setPool }) => {
   const requestEditPlayer = async (newPlayer) => {
     try {
       const request = await fetch(
-        `http://localhost:3000/pools/${poolId}/players/edit`,
+        `${SERVER_URL}/pools/${poolId}/players/edit`,
         {
           method: "PATCH",
           headers: {
@@ -59,7 +60,7 @@ const PlayerEditableTable = ({ pool, setPool }) => {
   const requestRemovePlayer = async (playerId) => {
     try {
       const request = await fetch(
-        `http://localhost:3000/pools/${poolId}/players/remove`,
+        `${SERVER_URL}/pools/${poolId}/players/remove`,
         {
           method: "PATCH",
           headers: {

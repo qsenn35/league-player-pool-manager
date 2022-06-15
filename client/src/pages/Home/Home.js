@@ -1,10 +1,10 @@
-import { notification, Typography } from "antd";
+import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
-import { CreatePoolForm, JoinPoolForm } from "../../components";
+import { CreatePoolForm } from "../../components";
 import { useUserContext } from "../../hooks";
+import { SERVER_URL } from "../../constants";
 import "./home.css";
 
-const { Title } = Typography;
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Home = () => {
 
   const handleCreatePool = async (poolData) => {
     try {
-      const request = await fetch("http://localhost:3000/pools/create", {
+      const request = await fetch(`${SERVER_URL}/pools/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
