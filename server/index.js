@@ -25,6 +25,10 @@ const router = express.Router();
 
 app.use('/api', router);
 
+const db = mongoose.connection;
+db.on('open', () => console.log("Connected to Mongo DB"));
+db.on('error', () => console.log("Error connecting to Mongo DB"));
+
 mongoose.connect("mongodb://127.0.0.1:27017/player-pools");
 
 const isAuthed = (req, res, next) => {
@@ -101,6 +105,9 @@ router.post("/login", async (req, res) => {
     if (!password) return res.status(400).json({ error: "Password required." });
 
     const user = await User.findOne({ username: username });
+    if (!user)
+      return res.status(401).send({ error: "Username or Password is incorrect." });
+
     const isCorrectPassword = await comparePasswords(
       password,
       user.passwordHash
@@ -134,7 +141,8 @@ router.post("/login", async (req, res) => {
       accessToken,
     });
   } catch (err) {
-    res.status(400).json({ error: err });
+    console.error(err);
+    res.status(400).json({ error: "An unknown error occurred." });
   }
 });
 
