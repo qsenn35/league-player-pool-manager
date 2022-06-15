@@ -9,7 +9,7 @@ const secret = require("./secret.js");
 const { PORT } = require("./env.js");
 const { getAccessToken, comparePasswords, verifyToken } = require("./util.js");
 const { Pool } = require("./models/Pool.js");
-const { generateBootcampTeams } = require("./sorters/bootcampSort/index.js");
+const { generateBootcampTeams, generateCustomsTeams } = require("./sorters/index.js");
 const { User } = require("./models/User.js");
 
 const app = express();
@@ -352,20 +352,27 @@ router.patch(
 
       switch (teamsType) {
         case "customs":
+          if (pool.players.length === 10) {
+            const teams = generateCustomsTeams(pool.players);
+            pool.teams = teams;
+            await pool.save();
+            return res.status(200).send(pool);
+          }
+          return res.status(400).send({ error: `Invalid number of players for teams type: ${teamsType}` });
           break;
         case "tournament":
           break;
         case "bootcamp":
-          if (pool.players.length === 10) {
+          if (pool.players.length >= 10) {
             const [lowEloTeams, midEloTeams, highEloTeams] =
               generateBootcampTeams(pool.players);
             const teams = [...lowEloTeams, ...midEloTeams, ...highEloTeams];
             pool.teams = teams;
             await pool.save();
-            return res.status(200).status(pool);
+            return res.status(200).send(pool);
           }
           return res.status(400).json({
-            error: `Invalid number for players for teams type: ${teamsType}`,
+            error: `Invalid number of players for teams type: ${teamsType}`,
           });
       }
     } catch (err) {

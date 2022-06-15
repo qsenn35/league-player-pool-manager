@@ -1,5 +1,7 @@
 const { generateBootcampTeams } = require('./bootcampSort/index.js');
+const { generateCustomsTeams } = require('./customsSort/index.js');
 
-exports = {
+module.exports = {
   generateBootcampTeams,
+  generateCustomsTeams,
 }
