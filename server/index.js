@@ -21,6 +21,10 @@ app.use(
 );
 app.use(express.json());
 
+const router = express.Router();
+
+app.use('/api', router);
+
 mongoose.connect("mongodb://127.0.0.1:27017/player-pools");
 
 const isAuthed = (req, res, next) => {
@@ -58,7 +62,7 @@ const ownsPool = async (req, res, next) => {
   }
 };
 
-app.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
@@ -88,7 +92,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
@@ -135,7 +139,7 @@ app.post("/login", async (req, res) => {
 });
 
 // get user's pools
-app.get("/pools", async (req, res) => {
+router.get("/pools", async (req, res) => {
   try {
     // get access token
     const accessToken = getAccessToken(req.headers);
@@ -160,7 +164,7 @@ app.get("/pools", async (req, res) => {
   }
 });
 
-app.get("/pools/:id/view", async (req, res) => {
+router.get("/pools/:id/view", async (req, res) => {
   try {
     if (!req.params.id) res.status(400).json({});
     const pool = await Pool.findOne({ id: req.params.id });
@@ -172,7 +176,7 @@ app.get("/pools/:id/view", async (req, res) => {
   }
 });
 
-app.get("/pools/:id/edit", [isAuthed, ownsPool], async (req, res) => {
+router.get("/pools/:id/edit", [isAuthed, ownsPool], async (req, res) => {
   try {
     const pool = await Pool.findOne({ id: req.params.id });
     if (!pool) return res.status(404).json({ error: "Pool not found" });
@@ -183,7 +187,7 @@ app.get("/pools/:id/edit", [isAuthed, ownsPool], async (req, res) => {
   }
 });
 
-app.delete("/pools/:id/delete", [isAuthed, ownsPool], async (req, res) => {
+router.delete("/pools/:id/delete", [isAuthed, ownsPool], async (req, res) => {
   try {
     const pool = await Pool.findOne({ id: req.params.id });
     if (!pool) return res.status(404).json({ error: "Pool not found" });
@@ -197,7 +201,7 @@ app.delete("/pools/:id/delete", [isAuthed, ownsPool], async (req, res) => {
   }
 });
 
-app.post("/pools/create", [isAuthed], async (req, res) => {
+router.post("/pools/create", [isAuthed], async (req, res) => {
   const title = req.body.title;
   const accessToken = getAccessToken(req.headers);
 
@@ -226,7 +230,7 @@ app.post("/pools/create", [isAuthed], async (req, res) => {
   }
 });
 
-app.patch("/pools/join", async (req, res) => {
+router.patch("/pools/join", async (req, res) => {
   try {
     const { poolId, player } = req.body;
     const pool = await Pool.findOne({ id: poolId });
@@ -249,7 +253,7 @@ app.patch("/pools/join", async (req, res) => {
   }
 });
 
-app.patch("/pools/:id/players/add", [isAuthed, ownsPool], async (req, res) => {
+router.patch("/pools/:id/players/add", [isAuthed, ownsPool], async (req, res) => {
   try {
     const pool = await Pool.findOne({ id: req.params.id });
     const player = req.body;
@@ -271,7 +275,7 @@ app.patch("/pools/:id/players/add", [isAuthed, ownsPool], async (req, res) => {
   }
 });
 
-app.patch("/pools/:id/players/edit", [isAuthed, ownsPool], async (req, res) => {
+router.patch("/pools/:id/players/edit", [isAuthed, ownsPool], async (req, res) => {
   try {
     const pool = await Pool.findOne({ id: req.params.id });
     const playerId = req.body.playerId;
@@ -298,7 +302,7 @@ app.patch("/pools/:id/players/edit", [isAuthed, ownsPool], async (req, res) => {
   }
 });
 
-app.patch(
+router.patch(
   "/pools/:id/players/remove",
   [isAuthed, ownsPool],
   async (req, res) => {
@@ -323,7 +327,7 @@ app.patch(
   }
 );
 
-app.patch(
+router.patch(
   "/pools/:id/teams/generate",
   [isAuthed, ownsPool],
   async (req, res) => {
