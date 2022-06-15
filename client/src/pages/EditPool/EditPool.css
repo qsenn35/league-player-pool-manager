@@ -21,8 +21,10 @@
 
 .EditPool__teams-controls {
   width: 650px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   margin-bottom: 0.5em;
 }
 

@@ -8,16 +8,17 @@
 .PortalLayout__nav-wrapper {
   height: 100vh;
   width: 100px;
+  background: white;
 }
 
 .PortalLayout__main-wrapper {
-  padding: 2em;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
-@media only screen and (max-width: 530px) {
+@media only screen and (max-width: 790px) {
   .PortalLayout {
+    position: fixed;
     width: 100vw;
     height: 100vh;
     overflow: auto;
@@ -26,7 +27,15 @@
   }
 
   .PortalLayout__nav-wrapper {
-    height: 80px;
+    background: white;
+    position: fixed;
+    filter: drop-shadow(0 0 0.3rem silver);
+    height: 67px;
     width: 100vw;
+    z-index: 9999999;
+  }
+
+  .PortalLayout__main-wrapper {
+    padding: 7em 2em 2em 2em;
   }
 }

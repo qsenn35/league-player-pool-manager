@@ -20,28 +20,37 @@ const Navigation = ({ routes }) => {
 
   return (
     <div className="Navigation__wrapper">
-    {
-      !isOpen ? <MenuOutlined style={{ position: 'fixed', fontSize: 30, cursor: "pointer", margin: "20px", }} onClick={toggleNavigation} /> : <></>
-    }
-    <div className={`Navigation ${isOpen ? 'Navigation__opened' : 'Navigation__closed' }`}>
-      <div className="Navigation__header">
-        <div className="Navigation__header-close-btn">
-          <CloseOutlined onClick={toggleNavigation} />
-        </div>
-      </div>
-      <Tabs
-        defaultActiveKey={location.pathname}
-        tabPosition="left"
-        onTabClick={handleTabChange}
-        tabBarStyle={{
-          width: "100%",
-        }}
+      {!isOpen ? (
+        <MenuOutlined
+          style={{ fontSize: 30, cursor: "pointer", margin: "20px", position: "fixed" }}
+          onClick={toggleNavigation}
+        />
+      ) : (
+        <div></div>
+      )}
+      <div
+        className={`Navigation ${
+          isOpen ? "Navigation__opened" : "Navigation__closed"
+        }`}
       >
-        {routes.map((route) => (
-          <TabPane tab={route.label} key={route.path}></TabPane>
-        ))}
-      </Tabs>
-    </div>
+        <div className="Navigation__header">
+          <div className="Navigation__header-close-btn">
+            <CloseOutlined onClick={toggleNavigation} />
+          </div>
+        </div>
+        <Tabs
+          defaultActiveKey={location.pathname}
+          tabPosition="left"
+          onTabClick={handleTabChange}
+          tabBarStyle={{
+            width: "100%",
+          }}
+        >
+          {routes.map((route) => (
+            <TabPane tab={route.label} key={route.path}></TabPane>
+          ))}
+        </Tabs>
+      </div>
     </div>
   );
 };
