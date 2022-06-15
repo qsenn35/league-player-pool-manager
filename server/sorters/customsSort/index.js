@@ -10,7 +10,7 @@ const RANK_VALUES = {
   BRONZE: 2,
   SILVER: 3,
   GOLD: 4,
-  PLAT: 5,
+  PLATINUM: 5,
   DIAMOND: 6,
   MASTERS: 7,
   GRANDMASTERS: 8,
