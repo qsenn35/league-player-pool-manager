@@ -9,13 +9,13 @@ const secret = require("./secret.js");
 const { PORT } = require("./env.js");
 const { getAccessToken, comparePasswords, verifyToken } = require("./util.js");
 const { Pool } = require("./models/Pool.js");
-const { generateBootcampTeams, generateCustomsTeams } = require("./sorters/index.js");
+const { generateRandomTeams, generateCustomsTeams, generateBootcampTeams } = require("./sorters/index.js");
 const { User } = require("./models/User.js");
 
 const app = express();
 app.use(
   cors({
-    origin: ["*"],
+    origin: "*",
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   })
 );
@@ -351,6 +351,14 @@ router.patch(
       if (!pool) return res.status(404).json({ error: "Pool not found." });
 
       switch (teamsType) {
+        case "random":
+          if (pool.players.length >= 10) {
+            const teams = generateRandomTeams(pool.players);
+            pool.teams = teams;
+            await pool.save();
+            return res.status(200).send(pool);
+          }
+          return res.status(400).send({ error: `Invalid number of players for teams type: ${teamsType}` });
         case "customs":
           if (pool.players.length === 10) {
             const teams = generateCustomsTeams(pool.players);
@@ -359,7 +367,6 @@ router.patch(
             return res.status(200).send(pool);
           }
           return res.status(400).send({ error: `Invalid number of players for teams type: ${teamsType}` });
-          break;
         case "tournament":
           break;
         case "bootcamp":

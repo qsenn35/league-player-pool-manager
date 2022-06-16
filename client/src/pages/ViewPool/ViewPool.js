@@ -66,7 +66,7 @@ const ViewPool = () => {
       
       setPool(response);
     });
-  }, [poolId]);
+  }, [poolId, navigate]);
 
   useEffect(() => {
     if (pool) {

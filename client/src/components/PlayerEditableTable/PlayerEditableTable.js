@@ -28,7 +28,6 @@ const PlayerEditableTable = ({ pool, setPool }) => {
       playerName: [],
     });
     setTableFilters(tableFilters);
-    console.log(pool.players);
   }, [pool]);
 
   const requestEditPlayer = async (newPlayer) => {

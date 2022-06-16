@@ -245,7 +245,16 @@ const EditPool = () => {
         <div className="EditPool__teams">
           <Title level={3}>Teams</Title>
           <div className="EditPool__teams-controls">
-            <Tooltip placement="top" title="10 Player Pools Only">
+            <Tooltip placement="left" title="10 Player Pools Minimum">
+              <Button 
+                type="primary"
+                disabled={pool.players.length < 10}
+                onClick={() => handleGenerateTeamsConfirm("random")}
+              >
+                Randomize Teams
+              </Button>
+            </Tooltip>
+            <Tooltip placement="left" title="10 Player Pools Only">
               <Button
                 type="primary"
                 disabled={pool.players.length !== 10}
