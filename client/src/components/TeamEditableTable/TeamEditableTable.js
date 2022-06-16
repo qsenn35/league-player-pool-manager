@@ -63,6 +63,11 @@ const TeamEditableTable = ({ pool, team }) => {
       dataIndex: "secondaryRole",
       key: "secondaryRole",
     },
+    {
+      title: "Autofilled",
+      dataIndex: "autoFilled",
+      key: "autoFilled",
+    }
   ];
 
   const editableColumns = columns.map((col) => {
