@@ -336,23 +336,10 @@ const balanceTeamsByRank = (teamOne, teamTwo) => {
     teamTwoValue = calcTeamValue(balancedTeamTwo);
 
     if (teamAlternator === 1) {
-      if (teamOneValue > teamTwoValue) {
-        player = findNextLowEloByRole(balancedTeamOne, clonedMergedPlayers);
-      } else if (teamOneValue < teamTwoValue) {
-        player = findNextHighEloByRole(balancedTeamOne, clonedMergedPlayers);
-      } else {
-        player = findNextLowEloByRole(balancedTeamOne, clonedMergedPlayers);
-      }
-
+      player = findNextHighEloByRole(balancedTeamOne, clonedMergedPlayers);
       if (player) balancedTeamOne[player.assignedRole] = player;
     } else {
-      if (teamOneValue > teamTwoValue) {
-        player = findNextHighEloByRole(balancedTeamTwo, clonedMergedPlayers);
-      } else if (teamOneValue < teamTwoValue) {
-        player = findNextLowEloByRole(balancedTeamTwo, clonedMergedPlayers);
-      } else {
-        player = findNextLowEloByRole(balancedTeamTwo, clonedMergedPlayers);
-      }
+      player = findNextHighEloByRole(balancedTeamTwo, clonedMergedPlayers);
       
       if (player) balancedTeamTwo[player.assignedRole] = player;
     }
