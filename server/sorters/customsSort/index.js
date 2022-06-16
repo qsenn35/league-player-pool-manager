@@ -178,31 +178,46 @@ const fillTeamSlotsByRole = (chosenPlayers, notChosenPlayers, fillPlayers) => {
         if (!teamOne.TOP) teamOne.TOP = player;
         else if (!teamTwo.TOP) teamTwo.TOP = player;
         // auto fill player
-        else fillPlayers.push(player);
+        else { 
+          player.autoFilled = true;
+          fillPlayers.push(player);
+        }
         break;
       case JUNGLE:
         if (!teamOne.JUNGLE) teamOne.JUNGLE = player;
         else if (!teamTwo.JUNGLE) teamTwo.JUNGLE = player;
         // auto fill player
-        else fillPlayers.push(player);
+        else { 
+          player.autoFilled = true;
+          fillPlayers.push(player);
+        }
         break;
       case MID:
         if (!teamOne.MID) teamOne.MID = player;
         else if (!teamTwo.MID) teamTwo.MID = player;
         // auto fill player
-        else fillPlayers.push(player);
+        else { 
+          player.autoFilled = true;
+          fillPlayers.push(player);
+        }
         break;
       case BOT:
         if (!teamOne.BOT) teamOne.BOT = player;
         else if (!teamTwo.BOT) teamTwo.BOT = player;
         // auto fill player
-        else fillPlayers.push(player);
+        else { 
+          player.autoFilled = true;
+          fillPlayers.push(player);
+        }
         break;
       case SUPPORT:
         if (!teamOne.SUPPORT) teamOne.SUPPORT = player;
         else if (!teamTwo.SUPPORT) teamTwo.SUPPORT = player;
         // auto fill player
-        else fillPlayers.push(player);
+        else { 
+          player.autoFilled = true;
+          fillPlayers.push(player);
+        }
         break;
     }
   });

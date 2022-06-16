@@ -68,7 +68,10 @@ const AddPlayerForm = ({
       type: id,
       payload: value,
     })
-    handleChange(state);
+    handleChange({
+      ...state,
+      [id]: value,
+    });
   }
 
   const _handleChange = (e) => {
