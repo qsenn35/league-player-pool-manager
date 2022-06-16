@@ -32,10 +32,11 @@ const autoFillPlayer = (player, team) => {
 
 const fillRoleWithPlayer = (player, team) => {
   const teamEntries = Object.entries(team);
+  let roleFilled = false;
 
   for (let i = 0; i < teamEntries.length; i++) {
     const [role, value] = teamEntries[i];
-    let roleFilled = false;
+    
 
     if (player.primaryRole === "FILL") {
       if (!value) {
@@ -44,7 +45,7 @@ const fillRoleWithPlayer = (player, team) => {
         break;
       }
     }
-
+    
     if (role === player.primaryRole) {
       if (!value) {
         team[role] = player;
@@ -53,6 +54,14 @@ const fillRoleWithPlayer = (player, team) => {
       }
     }
   
+    if (player.secondaryRole === "FILL") {
+      if (!value) {
+        team[role] = player;
+        roleFilled = true;
+        break;
+      }
+    }
+
     if (role === player.secondaryRole) {
       if (!value) {
         team[role] = player;
