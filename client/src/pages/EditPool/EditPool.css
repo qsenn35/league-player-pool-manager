@@ -15,16 +15,7 @@
   margin-bottom: 0.5em;
 }
 
-.EditPool__players-controls {
-  margin-bottom: 0.5em;
-}
-
-.EditPool__teams-controls {
-  width: 650px;
-  max-width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+.EditPool__players-controls, .EditPool__teams-controls  {
   margin-bottom: 0.5em;
 }
 

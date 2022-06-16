@@ -11,6 +11,7 @@ import TeamEditableTable from "./TeamEditableTable/TeamEditableTable";
 import PageLoader from "./PageLoader/PageLoader";
 import Navigation from "./Navigation/Navigation";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import TeamGeneratorDropdown from "./TeamGeneratorDropdown/TeamGeneratorDropdown";
 
 export {
   JoinPoolForm,
@@ -26,4 +27,5 @@ export {
   PageLoader,
   Navigation,
   ProtectedRoute,
+  TeamGeneratorDropdown,
 }
